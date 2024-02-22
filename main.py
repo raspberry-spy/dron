@@ -30,7 +30,7 @@ try:
     for i in range(markers):
         tello.send_rc_control(0, 0, 0, scan)
         while True:
-            image = frame_read.frame
+            image = cv2.cvtColor(frame_read.frame, cv2.COLOR_RGB2BGR)
             cv2.imshow("Image", image)
             cv2.waitKey(1)
             (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
