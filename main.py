@@ -10,7 +10,7 @@ tello.connect()
 print(f"Battery: {tello.get_battery()}%\nTemp: {tello.get_temperature()}°C")
 markers = int(input("Кол-во объектов: "))
 scan = int(input("Скорость сканирования: "))
-markerSizeInCM = 9.4
+markerSizeInCM = 15
 with open('calibration.yaml') as f:
     loadeddict = yaml.safe_load(f)
 mtx = loadeddict.get('camera_matrix')
@@ -40,19 +40,19 @@ try:
                 cv2.imshow("Image", image)
                 cv2.waitKey(1)
                 time.sleep(2)
-                image = frame_read.frame
+                image = cv2.cvtColor(frame_read.frame, cv2.COLOR_RGB2BGR)
                 cv2.imshow("Image", image)
                 cv2.waitKey(1)
                 (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, markerSizeInCM, mtx, dist)
                 tello.go_xyz_speed(int(tvec[0][0][2]) - 100, int(0 - tvec[0][0][0]), int(0 - tvec[0][0][1]) - 30, 50)
-                image = frame_read.frame
+                image = cv2.cvtColor(frame_read.frame, cv2.COLOR_RGB2BGR)
                 cv2.imshow("Image", image)
                 cv2.waitKey(1)
                 (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, markerSizeInCM, mtx, dist)
                 tello.go_xyz_speed(int(tvec[0][0][2]) - 30, int(0 - tvec[0][0][0]), int(0 - tvec[0][0][1]) - 30, 50)
-                rotate = int(rvec[0][0][0])
+                #rotate = int(rvec[0][0][0])
                 break
     if rotate > 0:
         tello.rotate_clockwise(rotate + 180)
