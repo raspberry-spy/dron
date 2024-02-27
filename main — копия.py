@@ -54,6 +54,7 @@ try:
                 (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, markerSizeInCM, mtx, dist)
                 tello.go_xyz_speed(int(tvec[0][0][2]) - 30, int(0 - tvec[0][0][0]), int(0 - tvec[0][0][1]) - 30, 50)
+                #rotate = int(rvec[0][0][0])
                 break
     if rotate > 0:
         tello.rotate_clockwise(rotate + 180)
