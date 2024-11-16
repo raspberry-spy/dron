@@ -10,7 +10,7 @@ tello.connect()
 print(f"Battery: {tello.get_battery()}%\nTemp: {tello.get_temperature()}°C") #Вывод заряда и температуры дрона
 markers = int(input("Кол-во объектов: "))
 scan = int(input("Скорость сканирования: "))
-markerSizeInCM = 15 #Установка размера маркера
+markerSizeInCM = 22 #Установка размера маркера
 with open('calibration.yaml') as f: #Загрузка матрицы искривления объектива камеры дрона
     loadeddict = yaml.safe_load(f)
 mtx = loadeddict.get('camera_matrix')
@@ -54,6 +54,7 @@ try:
                 (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
                 rvec, tvec, _ = cv2.aruco.estimatePoseSingleMarkers(corners, markerSizeInCM, mtx, dist)
                 tello.go_xyz_speed(int(tvec[0][0][2]) - 30, int(0 - tvec[0][0][0]), int(0 - tvec[0][0][1]) - 30, 50)
+                rotate = int(rvec[0][0][0])
                 break
     if rotate > 0:
         tello.rotate_clockwise(rotate + 180)
