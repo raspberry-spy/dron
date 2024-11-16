@@ -14,12 +14,16 @@ class Aruco:
 
     def detectMarkers(self, frame):
         _, ids, _ = self.detector.detectMarkers(frame)
-        return ids
+        ret = []
+        for i in ids:
+            ret.append(int(i[0]))
+        return ret
 
     def getXYZ(self, frame):
         corners, _, _ = self.detector.detectMarkers(frame)
         markers = []
         for c in corners:
-            _, R, t = cv2.solvePnP(self.marker_points, c, self.mtx, self.dist, None, None, False,
+            _, r, t = cv2.solvePnP(self.marker_points, c, self.mtx, self.dist, None, None, False,
                                    cv2.SOLVEPNP_IPPE_SQUARE)
-            markers.append({'x': t[2], 'y': 0 - t[0], 'z': 0 - t[1] - 30, 'yaw': r[0]})
+            markers.append({'x': int(t[2]), 'y': int(0 - t[0]), 'z': int(0 - t[1] - 30), 'yaw': int(r[0])})
+        return markers
