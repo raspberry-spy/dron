@@ -27,13 +27,14 @@ try:
     print(dimensions)
     arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_50)
     arucoParams = cv2.aruco.DetectorParameters_create()
+    detector = cv2.aruco.ArucoDetector(arucoDict, arucoParams)
     for i in range(markers):
         tello.send_rc_control(0, 0, 0, scan)
         while True:
             image = cv2.cvtColor(frame_read.frame, cv2.COLOR_RGB2BGR)
             cv2.imshow("Image", image)
             cv2.waitKey(1)
-            (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
+            (corners, ids, rejected) = detector.detectMarkers(image, arucoDict, parameters=arucoParams)
             if len(corners) > 0 and i in ids and len(ids) == 1:
                 tello.send_rc_control(0, 0, 0, 0)
                 print("Found marker")
